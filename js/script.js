@@ -7,13 +7,21 @@ FSJS project 2 - List Filter and Pagination
 
 
 let list = document.querySelectorAll('.student-list > .student-item');
-// let searchResult = [];
+const itemsPerPage = 10;
 
-// let page = 1;
+function appendNoResultsMsg() {
+  const div = document.createElement('div');
+  div.textContent = 'No results.';
+  div.style.display = 'none';
+  div.className = 'js-msg__no-results';
+  div.style = 'text-align: center; margin-top: 4rem';
+  document.querySelector('.page').appendChild(div);
+}
+appendNoResultsMsg();
 
 const showPage = (list, page) => {
-  const startIndex = (page * 10) - 10;
-  const endIndex = (page * 10) - 1;
+  const startIndex = (page * itemsPerPage) - itemsPerPage;
+  const endIndex = (page * itemsPerPage) - 1;
 
   list.forEach((item, index) => {
     if (index >= startIndex && index <= endIndex) {
@@ -23,31 +31,13 @@ const showPage = (list, page) => {
     }
   });
 
-
-  // if (searchResult === null) {
-  //   list.forEach((item, index) => {
-  //     if (index >= startIndex && index <= endIndex) {
-  //       item.style.display = '';
-  //     } else {
-  //       item.style.display = 'none';
-  //     }
-  //   });
-  // }
-
-  // else {
-  //   list.forEach(item => item.style.display = 'none');
-
-  //   searchResult.forEach((item, index) => {
-  //     if (index >= startIndex && index <= endIndex) {
-  //       item.style.display = '';
-  //     } else {
-  //       item.style.display = 'none';
-  //     }
-  //   });
-  //   const pagination = document.querySelector('.pagination');
-  //   document.querySelector('.page').removeChild(pagination);  
-  //   appendPageLinks(searchResult);
-  // }
+  if (list.length === 0) {
+    const msg = document.querySelector('.js-msg__no-results');
+    msg.style.display = '';
+  } else {
+    const msg = document.querySelector('.js-msg__no-results');
+    msg.style.display = 'none';
+  }
 };
 
 function handleClick(e) {
@@ -60,7 +50,7 @@ function handleClick(e) {
 }
 
 const appendPageLinks = (list) => {
-  const pages = Math.ceil(list.length / 10);
+  const pages = Math.ceil(list.length / itemsPerPage);
   const div = document.createElement('div');
   div.className = 'pagination';
   const ul = document.createElement('ul');
@@ -102,6 +92,7 @@ function appendSearchform() {
   button.textContent = 'Search';
   button.href = '#';
   button.onclick = handleSearch;
+  input.onkeyup = handleSearch;
   document.querySelector('.page-header').appendChild(div);
 }
 appendSearchform();
@@ -120,7 +111,7 @@ function handleSearch() {
 
     // console.log(test);
     // console.log(test.indexOf('isResult') > -1);
-    
+
     if (name.includes(searchInput)) {
       element.className.includes(' isResult') ? '' : element.className += ' isResult';
     } else {
@@ -138,3 +129,5 @@ function handleSearch() {
   // showPage(list, 1, searchResult);
   // appendPageLinks(list);
 }
+
+
