@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /** ****************************************
 Treehouse Techdegree:
 FSJS project 2 - List Filter and Pagination
@@ -5,15 +6,16 @@ FSJS project 2 - List Filter and Pagination
 
 // Study guide for this project - https://drive.google.com/file/d/1OD1diUsTMdpfMDv677TfL1xO2CEkykSz/view?usp=sharing
 
-
+// initializes global list, will be updated by handleSearch
 let list = document.querySelectorAll('.student-list > .student-item');
+// sets the number of items to show per page
 const itemsPerPage = 10;
 
 function appendNoResultsMsg() {
   const div = document.createElement('div');
   div.textContent = 'No results.';
   div.style.display = 'none';
-  div.className = 'js-msg__no-results';
+  div.className = 'js-msg--no-results';
   div.style = 'text-align: center; margin-top: 4rem';
   document.querySelector('.page').appendChild(div);
 }
@@ -32,10 +34,10 @@ const showPage = (list, page) => {
   });
 
   if (list.length === 0) {
-    const msg = document.querySelector('.js-msg__no-results');
+    const msg = document.querySelector('.js-msg--no-results');
     msg.style.display = '';
   } else {
-    const msg = document.querySelector('.js-msg__no-results');
+    const msg = document.querySelector('.js-msg--no-results');
     msg.style.display = 'none';
   }
 };
@@ -98,36 +100,61 @@ function appendSearchform() {
 appendSearchform();
 
 function handleSearch() {
-  list = document.querySelectorAll('.student-list > .student-item');
-  // const event = e.target;
-  const searchInput = document.querySelector('.searchInput').value;
-  // const listNames = list.querySelectorAll('.student-details > h3')
-  // let searchResult = [];
-  for (let i = 0; i < list.length; i++) {
-    const element = list[i];
-    const name = element.querySelector('h3').textContent;
-
-    const test = element.className;
-
-    // console.log(test);
-    // console.log(test.indexOf('isResult') > -1);
-
-    if (name.includes(searchInput)) {
-      element.className.includes(' isResult') ? '' : element.className += ' isResult';
-    } else {
-      element.className = element.className.replace(' isResult', '');
-    }
+  function globalReset() {
+    // Resets global list
+    list = document.querySelectorAll('.student-list > .student-item');
+    list.forEach((studentItem) => {
+      // Hides all items
+      studentItem.style.display = 'none';
+      // Removes isResult class
+      studentItem.className = studentItem.className.replace(' isResult', '');
+    });
   }
-  const searchResult = document.querySelectorAll('.student-list > .isResult');
 
-  list.forEach(item => item.style.display = 'none');
+  function getSearchInput() {
+    // Note: If adding features, getSearchInput could handle other sources of input.
+    // Gets search input.
+    const searchInput = document.querySelector('.searchInput').value;
+    return searchInput;
+  }
+
+  function getSearchResult(searchInput) {
+    // Adds class 'isResult' to each studentItem that matches search term.
+    for (let i = 0; i < list.length; i++) {
+      const studentItem = list[i];
+      const name = studentItem.querySelector('h3').textContent;
+      if (name.includes(searchInput)) {
+        studentItem.className += ' isResult';
+      }
+    }
+    // Creates a list of elements with 'isResult' class.
+    const searchResult = document.querySelectorAll('.student-list > .isResult');
+    return searchResult;
+  }
+
+  function updatePagination(searchResult) {
+    // Removes pagination element.
+    const pagination = document.querySelector('.pagination');
+    document.querySelector('.page').removeChild(pagination);
+    // Creates pagination again with new search results.
+    appendPageLinks(searchResult);
+  }
+
+  // Resets global list, hides all items
+  globalReset();
+
+  // Gets search input.
+  const searchInput = getSearchInput();
+
+  // Gets search result.
+  const searchResult = getSearchResult(searchInput);
+
+  // Updates global list with search result.
   list = searchResult;
+
+  // Refreshes page.
   showPage(list, 1);
-  const pagination = document.querySelector('.pagination');
-  document.querySelector('.page').removeChild(pagination);
-  appendPageLinks(searchResult);
-  // showPage(list, 1, searchResult);
-  // appendPageLinks(list);
+
+  // Updates page links.
+  updatePagination(searchResult);
 }
-
-
