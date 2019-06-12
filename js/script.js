@@ -6,36 +6,48 @@ FSJS project 2 - List Filter and Pagination
 // Study guide for this project - https://drive.google.com/file/d/1OD1diUsTMdpfMDv677TfL1xO2CEkykSz/view?usp=sharing
 
 
-const list = document.querySelectorAll('.student-list > .student-item');
+let list = document.querySelectorAll('.student-list > .student-item');
+// let searchResult = [];
 
 // let page = 1;
 
-const showPage = (list, page, searchResult = null) => {
+const showPage = (list, page) => {
   const startIndex = (page * 10) - 10;
   const endIndex = (page * 10) - 1;
 
-  if (searchResult === null) {
-    list.forEach((item, index) => {
-      if (index >= startIndex && index <= endIndex) {
-        item.style.display = '';
-      } else {
-        item.style.display = 'none';
-      }
-    });
-  } else {
-    list.forEach(item => item.style.display = 'none');
+  list.forEach((item, index) => {
+    if (index >= startIndex && index <= endIndex) {
+      item.style.display = '';
+    } else {
+      item.style.display = 'none';
+    }
+  });
 
-    searchResult.forEach((item, index) => {
-      if (index >= startIndex && index <= endIndex) {
-        item.style.display = '';
-      } else {
-        item.style.display = 'none';
-      }
-    });
-    const pagination = document.querySelector('.pagination');
-    document.querySelector('.page').removeChild(pagination);  
-    appendPageLinks(searchResult);
-  }
+
+  // if (searchResult === null) {
+  //   list.forEach((item, index) => {
+  //     if (index >= startIndex && index <= endIndex) {
+  //       item.style.display = '';
+  //     } else {
+  //       item.style.display = 'none';
+  //     }
+  //   });
+  // }
+
+  // else {
+  //   list.forEach(item => item.style.display = 'none');
+
+  //   searchResult.forEach((item, index) => {
+  //     if (index >= startIndex && index <= endIndex) {
+  //       item.style.display = '';
+  //     } else {
+  //       item.style.display = 'none';
+  //     }
+  //   });
+  //   const pagination = document.querySelector('.pagination');
+  //   document.querySelector('.page').removeChild(pagination);  
+  //   appendPageLinks(searchResult);
+  // }
 };
 
 function handleClick(e) {
@@ -95,6 +107,7 @@ function appendSearchform() {
 appendSearchform();
 
 function handleSearch() {
+  list = document.querySelectorAll('.student-list > .student-item');
   // const event = e.target;
   const searchInput = document.querySelector('.searchInput').value;
   // const listNames = list.querySelectorAll('.student-details > h3')
@@ -102,14 +115,26 @@ function handleSearch() {
   for (let i = 0; i < list.length; i++) {
     const element = list[i];
     const name = element.querySelector('h3').textContent;
+
+    const test = element.className;
+
+    // console.log(test);
+    // console.log(test.indexOf('isResult') > -1);
+    
     if (name.includes(searchInput)) {
-      element.className.includes('isResult') ? '' : element.className += ' isResult';
+      element.className.includes(' isResult') ? '' : element.className += ' isResult';
     } else {
-      element.className.includes('isResult') ? element.className.replace(' isResult', '') : '';
+      element.className = element.className.replace(' isResult', '');
     }
   }
   const searchResult = document.querySelectorAll('.student-list > .isResult');
 
-  showPage(list, 1, searchResult);
+  list.forEach(item => item.style.display = 'none');
+  list = searchResult;
+  showPage(list, 1);
+  const pagination = document.querySelector('.pagination');
+  document.querySelector('.page').removeChild(pagination);
+  appendPageLinks(searchResult);
+  // showPage(list, 1, searchResult);
   // appendPageLinks(list);
 }
