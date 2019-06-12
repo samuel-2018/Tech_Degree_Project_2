@@ -1,10 +1,7 @@
-/* eslint-disable no-param-reassign */
 /** ****************************************
 Treehouse Techdegree:
 FSJS project 2 - List Filter and Pagination
 ***************************************** */
-
-// Study guide for this project - https://drive.google.com/file/d/1OD1diUsTMdpfMDv677TfL1xO2CEkykSz/view?usp=sharing
 
 // Initializes global list; will be updated by handleSearch.
 let list = document.querySelectorAll('.student-list > .student-item');
@@ -21,7 +18,6 @@ function appendNoResultsMsg() {
   div.style = 'text-align: center; margin-top: 4rem';
   document.querySelector('.page').appendChild(div);
 }
-appendNoResultsMsg();
 
 const showPage = (list, page) => {
   // Calculates range of student items to show on page.
@@ -90,9 +86,6 @@ const appendPageLinks = (list) => {
   document.querySelector('.page').appendChild(div);
 };
 
-showPage(list, 1);
-appendPageLinks(list);
-
 function appendSearchform() {
   // Creates the search form.
   const div = document.createElement('div');
@@ -112,7 +105,6 @@ function appendSearchform() {
   // Adds search form to top of page.
   document.querySelector('.page-header').appendChild(div);
 }
-appendSearchform();
 
 function handleSearch() {
   function globalReset() {
@@ -173,3 +165,9 @@ function handleSearch() {
   // Updates page links.
   updatePagination(searchResult);
 }
+
+// Initialize page.
+appendNoResultsMsg();
+showPage(list, 1);
+appendPageLinks(list);
+appendSearchform();
