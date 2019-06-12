@@ -15,9 +15,7 @@ Restricting how many items were displayed per page involved altering the style.d
 
 Pagination was determined by taking into consideration both the total number of items and the number of items to display per page. The user clicking on a page number results in displaying the items in the corresponding range.
 
-The search feature works both on click of the search button and in real time as the user types. To facilitate this, the global list of items and values determining whether an item is displayed are reset on search. 
-
-Then, the search function can filter out those results that do not match the current search term. The matching list is set as the global list and passed on to the functions responsible for updating the page.
+The search feature works both on click of the search button and in real time as the user types. To facilitate this, the global list of items and values determining whether an item is displayed are reset on search. Then, the search function can filter out those results that do not match the current search term. The matching list is set as the global list and passed on to the functions responsible for updating the page.
 
 ## “Extra Credit” Features
 
