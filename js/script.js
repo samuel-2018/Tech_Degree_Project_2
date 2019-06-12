@@ -8,25 +8,35 @@ FSJS project 2 - List Filter and Pagination
 
 const list = document.querySelectorAll('.student-list > .student-item');
 
-// let page = 2;
+// let page = 1;
 
-const showPage = (list, page) => {
-
-
+const showPage = (list, page, searchResult = null) => {
   const startIndex = (page * 10) - 10;
   const endIndex = (page * 10) - 1;
 
-  list.forEach((item, index) => {
-    if (index >= startIndex && index <= endIndex) {
-      item.style.display = '';
-    } else {
-      item.style.display = 'none';
-    }
-    // index >= startIndex && index <= endIndex ? item.style.display = '' : item.style.display = 'none';
-  });
-};
+  if (searchResult === null) {
+    list.forEach((item, index) => {
+      if (index >= startIndex && index <= endIndex) {
+        item.style.display = '';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+  } else {
+    list.forEach(item => item.style.display = 'none');
 
-showPage(list, 1);
+    searchResult.forEach((item, index) => {
+      if (index >= startIndex && index <= endIndex) {
+        item.style.display = '';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+    const pagination = document.querySelector('.pagination');
+    document.querySelector('.page').removeChild(pagination);  
+    appendPageLinks(searchResult);
+  }
+};
 
 function handleClick(e) {
   const event = e.target;
@@ -54,7 +64,52 @@ const appendPageLinks = (list) => {
     ul.appendChild(li);
   }
   document.querySelector('.page').appendChild(div);
-}
+};
 
+showPage(list, 1);
 appendPageLinks(list);
 
+// You can reference the examples/example-exceeds.html file, lines 16-19, to see an example of the markup you'll create.
+
+// <!-- student search HTML to add dynamically -->
+// <div class="student-search">
+//   <input placeholder="Search for students...">
+//   <button>Search</button>
+// </div>
+// <!-- end search -->
+
+function appendSearchform() {
+  const div = document.createElement('div');
+  const input = document.createElement('input');
+  const button = document.createElement('button');
+  div.appendChild(input);
+  div.appendChild(button);
+  div.className = 'student-search';
+  input.placeholder = 'Search for students...';
+  input.className = 'searchInput';
+  button.textContent = 'Search';
+  button.href = '#';
+  button.onclick = handleSearch;
+  document.querySelector('.page-header').appendChild(div);
+}
+appendSearchform();
+
+function handleSearch() {
+  // const event = e.target;
+  const searchInput = document.querySelector('.searchInput').value;
+  // const listNames = list.querySelectorAll('.student-details > h3')
+  // let searchResult = [];
+  for (let i = 0; i < list.length; i++) {
+    const element = list[i];
+    const name = element.querySelector('h3').textContent;
+    if (name.includes(searchInput)) {
+      element.className.includes('isResult') ? '' : element.className += ' isResult';
+    } else {
+      element.className.includes('isResult') ? element.className.replace(' isResult', '') : '';
+    }
+  }
+  const searchResult = document.querySelectorAll('.student-list > .isResult');
+
+  showPage(list, 1, searchResult);
+  // appendPageLinks(list);
+}
