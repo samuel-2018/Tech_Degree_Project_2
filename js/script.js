@@ -106,6 +106,8 @@ function appendSearchform() {
   document.querySelector('.page-header').appendChild(div);
 }
 
+/* ****** SEARCH ****** */
+
 function handleSearch() {
   function globalReset() {
     // Resets global list
