@@ -6,11 +6,13 @@ FSJS project 2 - List Filter and Pagination
 
 // Study guide for this project - https://drive.google.com/file/d/1OD1diUsTMdpfMDv677TfL1xO2CEkykSz/view?usp=sharing
 
-// initializes global list, will be updated by handleSearch
+// Initializes global list; will be updated by handleSearch.
 let list = document.querySelectorAll('.student-list > .student-item');
-// sets the number of items to show per page
+
+// Sets the number of items to show per page.
 const itemsPerPage = 10;
 
+// Creates element to display 'No results' as needed.
 function appendNoResultsMsg() {
   const div = document.createElement('div');
   div.textContent = 'No results.';
@@ -22,67 +24,77 @@ function appendNoResultsMsg() {
 appendNoResultsMsg();
 
 const showPage = (list, page) => {
+  // Calculates range of student items to show on page.
   const startIndex = (page * itemsPerPage) - itemsPerPage;
   const endIndex = (page * itemsPerPage) - 1;
 
-  list.forEach((item, index) => {
+  // Updates 'display' for each student item.
+  list.forEach((studentItem, index) => {
     if (index >= startIndex && index <= endIndex) {
-      item.style.display = '';
+      // In range, display.
+      studentItem.style.display = '';
     } else {
-      item.style.display = 'none';
+      // Otherwise, hide.
+      studentItem.style.display = 'none';
     }
   });
 
+  // If the list is empty, activates 'No results' message.
   if (list.length === 0) {
     const msg = document.querySelector('.js-msg--no-results');
     msg.style.display = '';
   } else {
+    // If the list is NOT empty, deactivates 'No results' message.
     const msg = document.querySelector('.js-msg--no-results');
     msg.style.display = 'none';
   }
 };
 
+// Handles clicks on page numbers.
 function handleClick(e) {
   const event = e.target;
-  const pagination = document.querySelectorAll('.pagination > ul > li > a'); // could add a class so a long selector isn't necessary
-  pagination.forEach(item => item.className = '');
+  const pagination = document.querySelectorAll('.pagination > ul > li > a');
+  // Clears class name from all page number elements.
+  pagination.forEach(pageNumber => pageNumber.className = '');
+  // Adds 'active' class to page number clicked.
   event.className = 'active';
+  // Gets page number clicked.
   const newPage = event.textContent;
+  // Calls for display of new page, passing number clicked.
   showPage(list, newPage);
 }
 
 const appendPageLinks = (list) => {
+  // Calculates number of pages.
   const pages = Math.ceil(list.length / itemsPerPage);
+
+  // Creates container element.
   const div = document.createElement('div');
   div.className = 'pagination';
   const ul = document.createElement('ul');
   div.appendChild(ul);
+
+  // Creates page links.
   for (let i = 1; i <= pages; i++) {
     const li = document.createElement('li');
     const a = document.createElement('a');
     a.href = '#';
     a.textContent = i;
     a.onclick = handleClick;
+    // If first page, sets as active.
     i === 0 ? a.className = 'active' : '';
     li.appendChild(a);
     ul.appendChild(li);
   }
+  // Adds pagination to bottom of page.
   document.querySelector('.page').appendChild(div);
 };
 
 showPage(list, 1);
 appendPageLinks(list);
 
-// You can reference the examples/example-exceeds.html file, lines 16-19, to see an example of the markup you'll create.
-
-// <!-- student search HTML to add dynamically -->
-// <div class="student-search">
-//   <input placeholder="Search for students...">
-//   <button>Search</button>
-// </div>
-// <!-- end search -->
-
 function appendSearchform() {
+  // Creates the search form.
   const div = document.createElement('div');
   const input = document.createElement('input');
   const button = document.createElement('button');
@@ -93,8 +105,11 @@ function appendSearchform() {
   input.className = 'searchInput';
   button.textContent = 'Search';
   button.href = '#';
+  // Searches on button click.
   button.onclick = handleSearch;
+  // Searches as the user types.
   input.onkeyup = handleSearch;
+  // Adds search form to top of page.
   document.querySelector('.page-header').appendChild(div);
 }
 appendSearchform();
