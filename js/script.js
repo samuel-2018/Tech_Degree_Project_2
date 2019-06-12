@@ -78,7 +78,7 @@ const appendPageLinks = (list) => {
     a.textContent = i;
     a.onclick = handleClick;
     // If first page, sets as active.
-    i === 0 ? a.className = 'active' : '';
+    i === 1 ? a.className = 'active' : '';
     li.appendChild(a);
     ul.appendChild(li);
   }
